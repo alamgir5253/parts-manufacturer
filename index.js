@@ -13,16 +13,20 @@ app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.r8qzj.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
-});
-console.log(uri);
+
 
 
 async function run() {
   try {
+    await client.connect()
+  const partsCollection = client.db("bike-parts").collection("parts");
+
+  app.get('/parts', async(req, res) =>{
+    const query ={}
+    const result = await partsCollection.find(query).toArray()
+    res.send(result)
+  })
+
    
   }
   finally {
@@ -40,3 +44,11 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log('listening to portt', port);
 })
+
+
+// client.connect(err => {
+//   const collection = client.db("test").collection("devices");
+//   // perform actions on the collection object
+//   client.close();
+// });
+// console.log(uri);
