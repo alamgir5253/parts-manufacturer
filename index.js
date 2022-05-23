@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 // const jwt = require('jsonwebtoken');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 require('dotenv').config();
 const port = process.env.PORT || 5000
@@ -27,6 +27,13 @@ async function run() {
     res.send(result)
   })
 
+  app.get('/parts/:id', async(req, res) =>{
+    const id = req.params.id
+    const query = {_id: ObjectId(id)}
+    const part = await partsCollection.findOne(query)
+    res.send(part)
+  })
+
    
   }
   finally {
@@ -44,11 +51,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log('listening to portt', port);
 })
-
-
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   client.close();
-// });
-// console.log(uri);
