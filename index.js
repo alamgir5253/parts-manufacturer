@@ -35,11 +35,20 @@ async function run() {
     res.send(part)
   })
 //  post to order collection 
-  app.post('/order'), async(req, res) =>{
+  app.post('/order', async(req, res) =>{
     const order = req.body
     const result = await orderCollection.insertOne(order)
     res.send(result)
-  }
+  })
+
+  // get user order by email api 
+  app.get('/order', async(req, res) =>{
+     const email = req.query.email
+     const query ={email:email}
+     const order =await orderCollection.find(query).toArray()
+     res.send(order)
+
+  })
    
   }
   finally {
