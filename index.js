@@ -120,12 +120,26 @@ async function run() {
   // admin api 
   app.put('/user/admin/:email', VerifyJWT, async(req,res) =>{
     const email = req.params.email
-    const filter = {email:email}
-    const updateDoc = {
-      $set:{role:'admin'}
-    }
-    const result = await userCollection.updateOne(filter,updateDoc)
-    res.send(result)
+    const request = req.decoded.email
+    const account = await userCollection.findOne({email:request})
+    if(account.role === 'admin'){
+      const filter = {email:email}
+      const updateDoc = {
+        $set:{role:'admin'}
+      }
+      const result = await userCollection.updateOne(filter,updateDoc)
+      res.send(result)
+    }else{
+      return res.status(403).send({massage:'forbidden accesses'})
+     }
+   
+  })
+
+  app.get('/admin/:email', async(req, res)=>{
+     const email= req.params.email
+     const user= await userCollection.findOne({email: email})
+     const isAdmin = user.role === 'admin'
+     res.send({admin: isAdmin})
   })
    
   }
