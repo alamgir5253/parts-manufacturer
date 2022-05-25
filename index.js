@@ -32,6 +32,7 @@ function VerifyJWT(req, res, next){
 
 }
 
+
 async function run() {
   try {
     await client.connect()
@@ -95,6 +96,13 @@ async function run() {
     res.send(result)
   })
 
+  // get all user to dashboard alluser page 
+  app.get('/user', VerifyJWT, async(req, res) =>{
+    const query = {}
+    const result = await userCollection.find(query).toArray()
+    res.send(result)
+  })
+
   // put to user collection 
   app.put('/user/:email', async(req,res) =>{
     const email = req.params.email
@@ -107,6 +115,17 @@ async function run() {
     const result = await userCollection.updateOne(filter,updateDoc,options)
     const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET);
     res.send({result, token})
+  })
+
+  // admin api 
+  app.put('/user/admin/:email', VerifyJWT, async(req,res) =>{
+    const email = req.params.email
+    const filter = {email:email}
+    const updateDoc = {
+      $set:{role:'admin'}
+    }
+    const result = await userCollection.updateOne(filter,updateDoc)
+    res.send(result)
   })
    
   }
