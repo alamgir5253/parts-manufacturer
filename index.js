@@ -54,6 +54,16 @@ async function run() {
     const part = await partsCollection.findOne(query)
     res.send(part)
   })
+
+  // get all orders to display in all order page 
+  app.get('/allorder', async(req, res) =>{
+    const query = {}
+    const orders = await orderCollection.find(query).toArray()
+    res.send(orders)
+
+
+
+  })
 //  post to order collection 
   app.post('/order', async(req, res) =>{
     const order = req.body
