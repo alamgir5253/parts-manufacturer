@@ -23,6 +23,7 @@ async function run() {
   const orderCollection = client.db("bike-parts").collection("order");
   const reviewCollection = client.db("bike-parts").collection("review");
   const profileCollection = client.db("bike-parts").collection("profile");
+  const userCollection = client.db("bike-parts").collection("user");
 
   app.get('/parts', async(req, res) =>{
     const query ={}
@@ -69,6 +70,19 @@ async function run() {
   app.post('/profile', async(req, res) =>{
     const detail = req.body
     const result = await profileCollection.insertOne(detail)
+    res.send(result)
+  })
+
+  // put to user collection 
+  app.put('/user/:email', async(req,res) =>{
+    const email = req.params.email
+    const user = req.body
+    const filter = {email:email}
+    const options ={upsert: true}
+    const updateDoc = {
+      $set:user
+    }
+    const result = await userCollection.updateOne(filter,updateDoc,options)
     res.send(result)
   })
    
