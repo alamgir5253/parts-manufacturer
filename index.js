@@ -31,8 +31,6 @@ function VerifyJWT(req, res, next){
   })
 
 }
-
-
 async function run() {
   try {
     await client.connect()
@@ -53,7 +51,7 @@ async function run() {
     const result = await partsCollection.insertOne(part)
     res.send(result)
   })
-  // delete parts 
+  // delete parts from parts collention
   app.delete('/parts/:id', async(req,res) =>{
     const id = req.params.id;
     const query = {_id: ObjectId(id)}
@@ -170,14 +168,6 @@ async function run() {
   }
 }
 run().catch(console.dir)
-
-
-
-
-
-
-
-
 
 app.get('/', (req, res) => {
   res.send(' process success')
