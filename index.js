@@ -60,9 +60,6 @@ async function run() {
     const query = {}
     const orders = await orderCollection.find(query).toArray()
     res.send(orders)
-
-
-
   })
 //  post to order collection 
   app.post('/order', async(req, res) =>{
